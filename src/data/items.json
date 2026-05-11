@@ -1,0 +1,102 @@
+{
+  "rosquinha": {
+    "id": "rosquinha",
+    "name": "Rosquinha 🍩",
+    "description": "A rosquinha favorita do Homer. Com cobertura de chocolate e granulado rosa.",
+    "type": "consumivel",
+    "rarity": "comum",
+    "price": 15,
+    "effect": { "energia": 20 },
+    "emoji": "🍩"
+  },
+  "cerveja_duff": {
+    "id": "cerveja_duff",
+    "name": "Cerveja Duff 🍺",
+    "description": "A cerveja oficial de Springfield. Homer não consegue imaginar a vida sem ela.",
+    "type": "consumivel",
+    "rarity": "comum",
+    "price": 10,
+    "effect": { "humor": 15, "produtividade": -5 },
+    "emoji": "🍺"
+  },
+  "saxofone": {
+    "id": "saxofone",
+    "name": "Saxofone de Lisa 🎷",
+    "description": "O instrumento favorito de Lisa Simpson. Raramente encontrado.",
+    "type": "instrumento",
+    "rarity": "raro",
+    "price": 500,
+    "effect": { "bonus_trabalho": 10 },
+    "emoji": "🎷"
+  },
+  "skate": {
+    "id": "skate",
+    "name": "Skate do Bart 🛹",
+    "description": "O skate vermelho do Bart. Usado para escapar da escola.",
+    "type": "ferramenta",
+    "rarity": "incomum",
+    "price": 120,
+    "effect": { "velocidade": 15 },
+    "emoji": "🛹"
+  },
+  "terno_azul": {
+    "id": "terno_azul",
+    "name": "Terno Azul 👔",
+    "description": "Um terno elegante para as ocasiões mais formais de Springfield.",
+    "type": "roupa",
+    "rarity": "incomum",
+    "price": 200,
+    "effect": { "bonus_trabalho": 20 },
+    "emoji": "👔"
+  },
+  "biblia": {
+    "id": "biblia",
+    "name": "Bíblia do Ned ✝️",
+    "description": "Uma Bíblia muito sobada do Ned Flanders. Okilly-dokilly!",
+    "type": "livro",
+    "rarity": "incomum",
+    "price": 80,
+    "effect": { "sabedoria": 10 },
+    "emoji": "✝️"
+  },
+  "reator_nuclear": {
+    "id": "reator_nuclear",
+    "name": "Reator Miniatura ☢️",
+    "description": "Uma miniatura do reator da Usina Nuclear do Sr. Burns. Radioativa? Provavelmente.",
+    "type": "colecionavel",
+    "rarity": "epico",
+    "price": 1000,
+    "effect": { "bonus_trabalho": 50 },
+    "emoji": "☢️"
+  },
+  "charuto_burns": {
+    "id": "charuto_burns",
+    "name": "Charuto do Sr. Burns 🚬",
+    "description": "Um charuto importado do acervo pessoal de Montgomery Burns. Excelente...",
+    "type": "colecionavel",
+    "rarity": "lendario",
+    "price": 2500,
+    "effect": { "status": "elite" },
+    "emoji": "🚬"
+  },
+  "bolo_marge": {
+    "id": "bolo_marge",
+    "name": "Bolo da Marge 🎂",
+    "description": "Feito com amor pela Marge. Dizem que cura qualquer tristeza.",
+    "type": "consumivel",
+    "rarity": "incomum",
+    "price": 60,
+    "effect": { "energia": 50, "humor": 25 },
+    "emoji": "🎂"
+  },
+  "estilingue": {
+    "id": "estilingue",
+    "name": "Estilingue 🏹",
+    "description": "O estilingue clássico do Bart. Usado para quebrar janelas do Ned.",
+    "type": "ferramenta",
+    "rarity": "comum",
+    "price": 25,
+    "effect": { "travessura": 20 },
+    "emoji": "🏹"
+  }
+}
