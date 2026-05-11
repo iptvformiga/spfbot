@@ -10,7 +10,7 @@ if (!groq) {
 const memorySystem = require('./memory');
 
 // Limite de histórico no contexto da IA
-const CONTEXT_LIMIT = 20;
+const CONTEXT_LIMIT = 40;
 
 /**
  * Envia mensagem para o NPC via Groq e retorna a resposta

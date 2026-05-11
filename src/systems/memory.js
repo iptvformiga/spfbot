@@ -15,9 +15,7 @@ async function saveMessage(npcId, userId, role, content) {
     const history = all[npcId][userId].history || [];
     history.push({ role, content, timestamp: Date.now() });
     
-    // Mantém as últimas 30 mensagens
-    if (history.length > 30) history.shift();
-    
+    // Salva tudo no banco sem apagar nada antigo
     all[npcId][userId].history = history;
     await db.set('memory', all);
 }
@@ -40,8 +38,6 @@ async function addFact(npcId, userId, fact) {
     
     const facts = all[npcId][userId].facts || [];
     facts.push({ text: fact, timestamp: Date.now() });
-    
-    if (facts.length > 15) facts.shift();
     
     all[npcId][userId].facts = facts;
     await db.set('memory', all);
