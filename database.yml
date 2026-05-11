@@ -1,0 +1,46 @@
+npcThreads.homer:608103790616248320: '1503477938023174165'
+inventory:
+  homer:
+    rosquinha: 10
+    cerveja_duff: 6
+    reator_nuclear: 1
+    estilingue: 1
+  marge:
+    bolo_marge: 2
+  bart:
+    skate: 1
+    estilingue: 1
+  lisa:
+    saxofone: 1
+  ned:
+    biblia: 2
+  moe:
+    cerveja_duff: 50
+  burns:
+    charuto_burns: 10
+    reator_nuclear: 1
+  krusty:
+    rosquinha: 20
+  '608103790616248320':
+    rosquinha: 1
+economy:
+  homer:
+    balance: 50
+  marge:
+    balance: 150
+  bart:
+    balance: 20
+  lisa:
+    balance: 100
+  ned:
+    balance: 300
+  moe:
+    balance: 500
+  burns:
+    balance: 10000
+  krusty:
+    balance: 1000
+  '608103790616248320':
+    balance: 85
+    totalSpent: 15
+    totalEarned: 0
