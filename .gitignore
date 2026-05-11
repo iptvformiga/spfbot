@@ -5,4 +5,5 @@ package-lock.json
 src/config.js
 .env
 database.yml
+memory.yml
 terminal.log

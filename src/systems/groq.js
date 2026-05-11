@@ -7,32 +7,34 @@ if (!groq) {
     console.warn('[Groq] AVISO: GROQ_API_KEY não encontrada no .env. Diálogos com NPCs não funcionarão.');
 }
 
-// Histórico de conversas por chave "npcId:userId"
-const conversationHistory = new Map();
+const memorySystem = require('./memory');
 
-const MAX_HISTORY = 20; // máximo de mensagens no contexto
+// Limite de histórico no contexto da IA
+const CONTEXT_LIMIT = 20;
 
 /**
  * Envia mensagem para o NPC via Groq e retorna a resposta
  */
 async function chatWithNPC(npcData, userMessage, userId, npcState = null) {
-    const key = `${npcData.id}:${userId}`;
+    const npcId = npcData.id;
 
-    if (!conversationHistory.has(key)) {
-        conversationHistory.set(key, []);
-    }
+    // Recupera histórico e fatos da memória persistente
+    const history = await memorySystem.getHistory(npcId, userId);
+    const facts = await memorySystem.getFacts(npcId, userId);
 
-    const history = conversationHistory.get(key);
+    // Adiciona mensagem atual do usuário na memória
+    await memorySystem.saveMessage(npcId, userId, 'user', userMessage);
 
-    // Adiciona mensagem do usuário
-    history.push({ role: 'user', content: userMessage });
+    // Prepara o histórico para o contexto (apenas role e content)
+    const contextHistory = history.map(h => ({ role: h.role, content: h.content }));
+    
+    // Adiciona a mensagem atual ao contexto se não estiver no histórico ainda
+    contextHistory.push({ role: 'user', content: userMessage });
 
-    // Limita histórico
-    if (history.length > MAX_HISTORY) {
-        history.splice(0, history.length - MAX_HISTORY);
-    }
+    // Limita o contexto enviado para a Groq
+    const limitedContext = contextHistory.slice(-CONTEXT_LIMIT);
 
-    // Constrói prompt do sistema com estado atual (dinheiro/itens)
+    // Constrói prompt do sistema com estado e fatos
     let dynamicSystemPrompt = npcData.systemPrompt;
     
     if (npcState) {
@@ -43,15 +45,23 @@ async function chatWithNPC(npcData, userMessage, userId, npcState = null) {
         dynamicSystemPrompt += `\n\n[ESTADO ATUAL DO PERSONAGEM]
 Dinheiro: 🍩 ${npcState.balance} Donuts
 Inventário:
-${inventoryStr}
-
-[INSTRUÇÕES DE NEGOCIAÇÃO]
-- Você pode negociar seus itens com os moradores (usuários).
-- Você pode comprar itens se tiver dinheiro.
-- Seja fiel ao seu personagem durante a negociação (ex: Homer quer comida, Burns quer lucro, Ned é justo).
-- Se você chegar a um acordo, confirme claramente o item e o valor.
-- Importante: Se o usuário pedir para ver seu inventário, diga o que você tem de forma natural.`;
+${inventoryStr}`;
     }
+
+    // Adiciona Fatos Memoráveis ao prompt
+    if (facts.length > 0) {
+        const factsStr = facts.map(f => `- ${f.text}`).join('\n');
+        dynamicSystemPrompt += `\n\n[MEMÓRIA DE LONGO PRAZO COM ESTE USUÁRIO]
+Você se lembra destes acontecimentos passados:
+${factsStr}`;
+    }
+
+    dynamicSystemPrompt += `\n\n[INSTRUÇÕES DE NEGOCIAÇÃO E MEMÓRIA]
+- Você deve lembrar o que já conversou e negociou com este usuário.
+- Se você deu um item ou vendeu algo no passado, aja como se soubesse disso.
+- Você pode negociar seus itens ou comprar do usuário.
+- Seja fiel ao seu personagem. Se chegar a um acordo, confirme claramente.
+- Se o usuário pedir para ver seu inventário, diga o que você tem de forma natural.`;
 
     try {
         const completion = await groq.chat.completions.create({
@@ -61,7 +71,7 @@ ${inventoryStr}
                     role: 'system',
                     content: dynamicSystemPrompt
                 },
-                ...history
+                ...limitedContext
             ],
             max_tokens: 250,
             temperature: 0.85,
@@ -69,8 +79,8 @@ ${inventoryStr}
 
         const response = completion.choices[0]?.message?.content || '...';
 
-        // Adiciona resposta ao histórico
-        history.push({ role: 'assistant', content: response });
+        // Salva resposta do NPC na memória persistente
+        await memorySystem.saveMessage(npcId, userId, 'assistant', response);
 
         return { success: true, response };
     } catch (err) {
@@ -83,20 +93,10 @@ ${inventoryStr}
  * Limpa o histórico de conversa de um NPC com um usuário
  */
 function clearHistory(npcId, userId) {
-    const key = `${npcId}:${userId}`;
-    conversationHistory.delete(key);
-}
-
-/**
- * Retorna o tamanho do histórico
- */
-function getHistorySize(npcId, userId) {
-    const key = `${npcId}:${userId}`;
-    return (conversationHistory.get(key) || []).length;
+    memorySystem.clearMemory(npcId, userId);
 }
 
 module.exports = {
     chatWithNPC,
-    clearHistory,
-    getHistorySize
+    clearHistory
 };
